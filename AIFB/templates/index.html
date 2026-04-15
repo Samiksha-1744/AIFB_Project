@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayFlow — Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0d14;
+      --surface: #13131f;
+      --surface2:#1a1a2e;
+      --border:  #1e1e30;
+      --accent:  #00d4aa;
+      --accent2: #7b5ea7;
+      --red:     #ff6b6b;
+      --green:   #00d4aa;
+      --text:    #e8e8f0;
+      --muted:   #6b6b85;
+      --radius:  14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 15% 15%, rgba(0,212,170,.05) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 85% 80%, rgba(123,94,167,.07) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,20,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px;
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px;
+    }
+
+    .nav-logo-icon {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+
+    .nav-actions { display: flex; gap: 10px; }
+
+    .btn-nav {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      padding: 7px 14px;
+      text-decoration: none;
+      transition: border-color .2s;
+    }
+
+    .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── LAYOUT ── */
+    main {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── BALANCE CARD ── */
+    .balance-card {
+      background: linear-gradient(135deg, #0f1f1a 0%, #131328 100%);
+      border: 1px solid rgba(0,212,170,.2);
+      border-radius: var(--radius);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      right: -40px; top: -40px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(0,212,170,.12) 0%, transparent 70%);
+    }
+
+    .balance-label {
+      font-size: 11px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .balance-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 38px; font-weight: 800;
+      letter-spacing: -1px;
+      color: #fff;
+    }
+
+    .balance-amount span {
+      font-size: 20px; color: var(--accent); margin-right: 4px;
+    }
+
+    .balance-sub {
+      margin-top: 10px;
+      font-size: 12px; color: var(--muted);
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .field { margin-bottom: 14px; }
+
+    label {
+      display: block;
+      font-size: 11px; font-weight: 500; letter-spacing: .07em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      padding: 11px 14px;
+      outline: none;
+      transition: border-color .2s;
+      appearance: none;
+    }
+
+    input:focus, select:focus { border-color: var(--accent); }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px;
+      transition: opacity .2s, transform .15s;
+    }
+
+    .btn:active { transform: scale(.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #00b38f);
+      color: #0d0d14;
+    }
+
+    .btn-secondary {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn:hover { opacity: .88; }
+
+    /* ── CONVERTER RESULT ── */
+    .conv-result {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 14px;
+      margin-top: 14px;
+      display: none;
+    }
+
+    .conv-result.show { display: block; }
+
+    .conv-result-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .conv-result-final {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--accent); margin-top: 4px;
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 13px;
+      padding: 12px 20px;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .3s;
+      z-index: 999;
+      max-width: 300px;
+    }
+
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.success { border-color: var(--green); color: var(--green); }
+    #toast.error   { border-color: var(--red);   color: var(--red);   }
+
+    /* ── RECENT TRANSACTIONS ── */
+    .txn-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .txn-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+
+    .txn-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+
+    .txn-icon.sent     { background: rgba(255,107,107,.15); }
+    .txn-icon.received { background: rgba(0,212,170,.15);   }
+
+    .txn-info { flex: 1; min-width: 0; }
+
+    .txn-party {
+      font-size: 13px; font-weight: 500;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .txn-id { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .txn-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px; font-weight: 700;
+      text-align: right;
+    }
+
+    .txn-amount.sent     { color: var(--red);   }
+    .txn-amount.received { color: var(--green); }
+
+    .txn-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--border);
+      color: var(--muted);
+      margin-top: 3px;
+      text-align: right;
+    }
+
+    .txn-badge.success { background: rgba(0,212,170,.12); color: var(--green); }
+    .txn-badge.failed  { background: rgba(255,107,107,.12); color: var(--red); }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 24px 0;
+    }
+
+    /* ── RIGHT COLUMN ── */
+    .right-col { display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── CONVERTER CURRENCIES ── */
+    .cur-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px; align-items: end;
+    }
+
+    .swap-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--muted);
+      cursor: pointer;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      transition: color .2s, border-color .2s;
+      flex-shrink: 0;
+      margin-bottom: 0;
+    }
+
+    .swap-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── ACTIONS ROW ── */
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">💳</div>
+    PayFlow
+  </div>
+  <div class="nav-actions">
+    <a class="btn-nav" href="/dashboard">📊 Dashboard</a>
+    <a class="btn-nav" href="/export">⬇ Export</a>
+    <a class="btn-nav" href="/logout">Logout</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- LEFT COLUMN -->
+  <div style="display:flex;flex-direction:column;gap:24px;">
+
+    <!-- Balance -->
+    <div class="balance-card">
+      <div class="balance-label">Available Balance</div>
+      <div class="balance-amount">
+        <span>₹</span><span id="balance">{{ "%.2f"|format(balance) }}</span>
+      </div>
+      <div class="balance-sub">PayFlow Wallet · Linked UPI</div>
+    </div>
+
+    <!-- Send Money -->
+    <div class="card">
+      <div class="card-title">Send Money</div>
+      <div class="field">
+        <label>Recipient</label>
+        <select id="receiver">
+          {% for r in receivers %}
+            <option>{{ r }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Amount (₹)</label>
+        <input id="send-amt" type="number" min="1" placeholder="0.00"/>
+      </div>
+      <button class="btn btn-primary" onclick="sendMoney()">Send →</button>
+    </div>
+
+    <!-- Receive Money -->
+    <div class="card">
+      <div class="card-title">Receive Money</div>
+      <div class="field">
+        <label>Amount (₹)</label>
+        <input id="receive-amt" type="number" min="1" placeholder="0.00"/>
+      </div>
+      <button class="btn btn-secondary" onclick="receiveMoney()">+ Receive</button>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="right-col">
+
+    <!-- Currency Converter -->
+    <div class="card">
+      <div class="card-title">Currency Converter</div>
+
+      <div class="cur-row">
+        <div class="field" style="margin-bottom:0;">
+          <label>From</label>
+          <select id="from">
+            <option>INR</option><option>USD</option><option>EUR</option>
+            <option>GBP</option><option>JPY</option><option>AED</option>
+          </select>
+        </div>
+        <button class="swap-btn" onclick="swapCurrencies()" title="Swap">⇄</button>
+        <div class="field" style="margin-bottom:0;">
+          <label>To</label>
+          <select id="to">
+            <option>USD</option><option>INR</option><option>EUR</option>
+            <option>GBP</option><option>JPY</option><option>AED</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:14px;">
+        <label>Amount</label>
+        <input id="conv-amt" type="number" min="0" placeholder="Enter amount"/>
+      </div>
+
+      <button class="btn btn-primary" onclick="convertCurrency()">Convert</button>
+
+      <div class="conv-result" id="conv-result">
+        <div class="conv-result-row">
+          <span>Gross amount</span>
+          <span id="conv-raw">—</span>
+        </div>
+        <div class="conv-result-row">
+          <span>Fee (0.5%)</span>
+          <span id="conv-fee">—</span>
+        </div>
+        <div class="conv-result-final" id="conv-final">—</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Amount you receive</div>
+      </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="card" style="flex:1;">
+      <div class="card-title">Recent Transactions</div>
+      <div class="txn-list" id="txn-list">
+        {% if transactions %}
+          {% for t in transactions %}
+          <div class="txn-item">
+            <div class="txn-icon {{ t.type | lower }}">
+              {{ '↗' if t.type == 'Sent' else '↙' }}
+            </div>
+            <div class="txn-info">
+              <div class="txn-party">{{ t.party }}</div>
+              <div class="txn-id">{{ t.id }}</div>
+            </div>
+            <div>
+              <div class="txn-amount {{ t.type | lower }}">
+                {{ '−' if t.type == 'Sent' else '+' }}₹{{ "%.2f"|format(t.amount) }}
+              </div>
+              <div class="txn-badge {{ t.status | lower }}">{{ t.status }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">No transactions yet.<br/>Send or receive money to get started.</div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+  function toast(msg, type="success") {
+    const el = document.getElementById("toast");
+    el.textContent = msg;
+    el.className = "show " + type;
+    setTimeout(() => el.className = "", 3000);
+  }
+
+  function setBalance(val) {
+    document.getElementById("balance").textContent =
+      parseFloat(val).toLocaleString("en-IN", { minimumFractionDigits:2, maximumFractionDigits:2 });
+  }
+
+  function prependTransaction(t) {
+    const list = document.getElementById("txn-list");
+    const empty = list.querySelector(".empty-state");
+    if (empty) empty.remove();
+
+    const div = document.createElement("div");
+    div.className = "txn-item";
+    const sign   = t.type === "Sent" ? "−" : "+";
+    const cls    = t.type === "Sent" ? "sent" : "received";
+    const icon   = t.type === "Sent" ? "↗" : "↙";
+    const badge  = t.status === "SUCCESS"
+      ? `<div class="txn-badge success">SUCCESS</div>`
+      : `<div class="txn-badge failed">FAILED</div>`;
+
+    div.innerHTML = `
+      <div class="txn-icon ${cls}">${icon}</div>
+      <div class="txn-info">
+        <div class="txn-party">${t.party}</div>
+        <div class="txn-id">${t.id || ''}</div>
+      </div>
+      <div>
+        <div class="txn-amount ${cls}">${sign}₹${parseFloat(t.amount).toFixed(2)}</div>
+        ${badge}
+      </div>`;
+
+    list.prepend(div);
+  }
+
+  // ── Send ──
+  function sendMoney() {
+    const receiver = document.getElementById("receiver").value;
+    const amt      = parseFloat(document.getElementById("send-amt").value);
+    if (!amt || amt <= 0) { toast("Enter a valid amount", "error"); return; }
+
+    fetch("/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: amt, receiver })
+    })
+    .then(r => r.json())
+    .then(d => {
+      setBalance(d.balance);
+      if (d.status === "SUCCESS") {
+        toast(d.message || "Money sent!");
+        prependTransaction({ type:"Sent", party:receiver, amount:amt, status:"SUCCESS" });
+        document.getElementById("send-amt").value = "";
+      } else {
+        toast(d.message || "Send failed", "error");
+        prependTransaction({ type:"Sent", party:receiver, amount:amt, status:"FAILED" });
+      }
+    })
+    .catch(() => toast("Network error", "error"));
+  }
+
+  // ── Receive ──
+  function receiveMoney() {
+    const amt = parseFloat(document.getElementById("receive-amt").value);
+    if (!amt || amt <= 0) { toast("Enter a valid amount", "error"); return; }
+
+    fetch("/receive", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: amt })
+    })
+    .then(r => r.json())
+    .then(d => {
+      setBalance(d.balance);
+      toast(`₹${amt.toFixed(2)} received!`);
+      prependTransaction({ type:"Received", party:"Self", amount:amt, status:"SUCCESS" });
+      document.getElementById("receive-amt").value = "";
+    })
+    .catch(() => toast("Network error", "error"));
+  }
+
+  // ── Convert ──
+  function convertCurrency() {
+    const from = document.getElementById("from").value;
+    const to   = document.getElementById("to").value;
+    const amt  = parseFloat(document.getElementById("conv-amt").value);
+    if (!amt || amt <= 0) { toast("Enter a valid amount", "error"); return; }
+
+    fetch("/convert", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: amt, from, to })
+    })
+    .then(r => r.json())
+    .then(d => {
+      const result = document.getElementById("conv-result");
+      document.getElementById("conv-raw").textContent   = `${d.symbol}${d.raw}`;
+      document.getElementById("conv-fee").textContent   = `${d.symbol}${d.fee}`;
+      document.getElementById("conv-final").textContent = `${d.symbol} ${d.final}`;
+      result.classList.add("show");
+    })
+    .catch(() => toast("Conversion failed", "error"));
+  }
+
+  // ── Swap currencies ──
+  function swapCurrencies() {
+    const fromEl = document.getElementById("from");
+    const toEl   = document.getElementById("to");
+    [fromEl.value, toEl.value] = [toEl.value, fromEl.value];
+  }
+</script>
+</body>
+</html>

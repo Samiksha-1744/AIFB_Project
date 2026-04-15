@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PayFlow — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0d14;
+      --surface: #13131f;
+      --surface2:#1a1a2e;
+      --border:  #1e1e30;
+      --accent:  #00d4aa;
+      --accent2: #7b5ea7;
+      --red:     #ff6b6b;
+      --text:    #e8e8f0;
+      --muted:   #6b6b85;
+      --radius:  14px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 15% 15%, rgba(0,212,170,.05) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 35% at 85% 80%, rgba(123,94,167,.07) 0%, transparent 70%);
+      pointer-events: none; z-index: 0;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,20,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px;
+    }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px;
+    }
+
+    .nav-logo-icon {
+      width: 30px; height: 30px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+
+    .btn-nav {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      padding: 7px 14px;
+      text-decoration: none;
+      transition: border-color .2s;
+    }
+
+    .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+    main {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px; font-weight: 800;
+    }
+
+    .page-header p {
+      color: var(--muted); font-size: 14px; margin-top: 4px;
+    }
+
+    /* ── STATS STRIP ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .stat-label {
+      font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px; font-weight: 800;
+    }
+
+    .stat-value.green { color: var(--accent); }
+    .stat-value.red   { color: var(--red); }
+
+    /* ── CHARTS ── */
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 680px) { .charts { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 16px;
+    }
+
+    .chart-card img {
+      width: 100%; border-radius: 8px;
+      display: block;
+    }
+
+    .no-chart {
+      height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 13px;
+      background: var(--surface2);
+      border-radius: 8px;
+    }
+
+    /* ── FULL TRANSACTION TABLE ── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0 14px 12px;
+      font-size: 11px; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+
+    tbody td {
+      padding: 12px 14px;
+      color: var(--text);
+    }
+
+    .amt-sent     { color: var(--red);   font-weight: 600; font-family: 'Syne', sans-serif; }
+    .amt-received { color: var(--accent); font-weight: 600; font-family: 'Syne', sans-serif; }
+
+    .badge {
+      display: inline-block;
+      font-size: 10px; padding: 3px 9px;
+      border-radius: 20px;
+    }
+
+    .badge-success { background: rgba(0,212,170,.12);   color: var(--accent); }
+    .badge-failed  { background: rgba(255,107,107,.12); color: var(--red); }
+
+    .empty-table {
+      text-align: center; padding: 40px;
+      color: var(--muted); font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">💳</div>
+    PayFlow
+  </div>
+  <a class="btn-nav" href="/wallet">← Back to Wallet</a>
+</nav>
+
+<main>
+  <div class="page-header">
+    <h1>Analytics Dashboard</h1>
+    <p>Overview of your wallet activity</p>
+  </div>
+
+  <!-- STATS -->
+  {% set total = transactions | length %}
+  {% set sent_count = transactions | selectattr('type','equalto','Sent') | list | length %}
+  {% set recv_count = transactions | selectattr('type','equalto','Received') | list | length %}
+  {% set sent_sum = transactions | selectattr('type','equalto','Sent') | sum(attribute='amount') %}
+  {% set recv_sum = transactions | selectattr('type','equalto','Received') | sum(attribute='amount') %}
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Total Transactions</div>
+      <div class="stat-value">{{ total }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Sent</div>
+      <div class="stat-value red">₹{{ "%.0f"|format(sent_sum) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Received</div>
+      <div class="stat-value green">₹{{ "%.0f"|format(recv_sum) }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Send / Receive</div>
+      <div class="stat-value">{{ sent_count }} / {{ recv_count }}</div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="charts">
+    <div class="chart-card">
+      <div class="card-title">Transaction Types</div>
+      {% if total > 0 %}
+        <img src="/static/txn_chart.png" alt="Transaction chart" />
+      {% else %}
+        <div class="no-chart">No transactions yet</div>
+      {% endif %}
+    </div>
+    <div class="chart-card">
+      <div class="card-title">Balance Over Time</div>
+      {% if total > 0 %}
+        <img src="/static/balance_chart.png" alt="Balance chart" />
+      {% else %}
+        <div class="no-chart">No transactions yet</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- TRANSACTION TABLE -->
+  <div class="table-card">
+    <div class="card-title">All Transactions</div>
+    {% if transactions %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Party</th>
+          <th>Amount</th>
+          <th>Balance After</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transactions | reverse %}
+        <tr>
+          <td style="color:var(--muted);font-size:11px;">{{ t.id }}</td>
+          <td>{{ t.type }}</td>
+          <td>{{ t.party }}</td>
+          <td class="{{ 'amt-sent' if t.type == 'Sent' else 'amt-received' }}">
+            {{ '−' if t.type == 'Sent' else '+' }}₹{{ "%.2f"|format(t.amount) }}
+          </td>
+          <td>₹{{ "%.2f"|format(t.balance) }}</td>
+          <td>
+            <span class="badge {{ 'badge-success' if t.status == 'SUCCESS' else 'badge-failed' }}">
+              {{ t.status }}
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <div class="empty-table">No transactions to display.</div>
+    {% endif %}
+  </div>
+</main>
+
+</body>
+</html>

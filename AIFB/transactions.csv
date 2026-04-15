@@ -1,0 +1,51 @@
+txn_id,direction,upi_id,amount,note,status,balance
+TXN1000,sent,vikram87@payfast,2862.0,Rent,SUCCESS,42138.0
+TXN1001,recv,sneha11@payfast,636.85,Rent,SUCCESS,42774.85
+TXN1002,sent,vikram87@payfast,2625.29,Coffee,SUCCESS,40149.56
+TXN1003,recv,vikram87@payfast,257.64,Recharge,SUCCESS,40407.2
+TXN1004,recv,priya29@payfast,794.55,Coffee,SUCCESS,41201.75
+TXN1005,recv,vikram87@payfast,1912.63,Auto payment,SUCCESS,43114.38
+TXN1006,sent,vikram87@payfast,1669.37,Recharge,SUCCESS,41445.01
+TXN1007,sent,vikram87@payfast,1225.81,Rent,SUCCESS,40219.2
+TXN1008,sent,priya29@payfast,1858.76,Rent,SUCCESS,38360.44
+TXN1009,recv,vikram87@payfast,677.47,Recharge,SUCCESS,39037.91
+TXN1010,recv,priya29@payfast,1777.21,Recharge,SUCCESS,40815.12
+TXN1011,sent,sneha11@payfast,846.5,Coffee,SUCCESS,39968.62
+TXN1012,recv,rahul54@payfast,1907.99,Rent,SUCCESS,41876.61
+TXN1013,sent,rahul54@payfast,710.26,Coffee,SUCCESS,41166.35
+TXN1014,sent,rahul54@payfast,782.24,Coffee,SUCCESS,40384.11
+TXN1015,sent,rahul54@payfast,2558.4,Coffee,SUCCESS,37825.71
+TXN1016,sent,priya29@payfast,2794.64,Coffee,SUCCESS,35031.07
+TXN1017,recv,rahul54@payfast,2564.69,Auto payment,SUCCESS,37595.76
+TXN1018,sent,vikram87@payfast,1842.9,Dinner split,SUCCESS,35752.86
+TXN1019,recv,sneha11@payfast,972.8,Auto payment,SUCCESS,36725.66
+TXN1020,sent,vikram87@payfast,243.78,Dinner split,SUCCESS,36481.88
+TXN1021,sent,sneha11@payfast,1021.77,Rent,SUCCESS,35460.11
+TXN1022,recv,sneha11@payfast,2241.22,Dinner split,SUCCESS,37701.33
+TXN1023,sent,vikram87@payfast,1203.7,Dinner split,SUCCESS,36497.63
+TXN1024,recv,priya29@payfast,1945.23,Recharge,SUCCESS,38442.86
+TXN1025,sent,sneha11@payfast,1070.75,Auto payment,SUCCESS,37372.11
+TXN1026,recv,priya29@payfast,969.22,Rent,SUCCESS,38341.33
+TXN1027,sent,priya29@payfast,2920.79,Rent,SUCCESS,35420.54
+TXN1028,recv,priya29@payfast,860.76,Rent,SUCCESS,36281.3
+TXN1029,recv,priya29@payfast,510.49,Coffee,SUCCESS,36791.79
+TXN1030,sent,vikram87@payfast,2708.14,Dinner split,SUCCESS,34083.65
+TXN1031,recv,sneha11@payfast,2147.45,Auto payment,SUCCESS,36231.1
+TXN1032,recv,vikram87@payfast,1711.56,Auto payment,SUCCESS,37942.66
+TXN1033,recv,rahul54@payfast,1876.82,Rent,SUCCESS,39819.48
+TXN1034,recv,priya29@payfast,1948.19,Dinner split,SUCCESS,41767.67
+TXN1035,recv,vikram87@payfast,2450.28,Coffee,SUCCESS,44217.95
+TXN1036,recv,sneha11@payfast,1710.16,Recharge,SUCCESS,45928.11
+TXN1037,recv,priya29@payfast,1090.41,Dinner split,SUCCESS,47018.52
+TXN1038,sent,priya29@payfast,1395.9,Coffee,SUCCESS,45622.62
+TXN1039,recv,priya29@payfast,219.47,Rent,SUCCESS,45842.09
+TXN1040,sent,vikram87@payfast,2138.82,Recharge,SUCCESS,43703.27
+TXN1041,sent,vikram87@payfast,671.21,Dinner split,SUCCESS,43032.06
+TXN1042,sent,vikram87@payfast,2920.99,Coffee,SUCCESS,40111.07
+TXN1043,sent,priya29@payfast,1592.3,Dinner split,SUCCESS,38518.77
+TXN1044,sent,rahul54@payfast,303.28,Dinner split,SUCCESS,38215.49
+TXN1045,sent,vikram87@payfast,344.14,Auto payment,SUCCESS,37871.35
+TXN1046,recv,priya29@payfast,870.77,Recharge,SUCCESS,38742.12
+TXN1047,sent,sneha11@payfast,2959.82,Coffee,SUCCESS,35782.3
+TXN1048,recv,vikram87@payfast,865.39,Auto payment,SUCCESS,36647.69
+TXN1049,recv,priya29@payfast,1316.71,Dinner split,SUCCESS,37964.4

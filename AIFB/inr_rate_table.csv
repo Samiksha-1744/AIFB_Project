@@ -1,0 +1,7 @@
+Currency,Name,Symbol,per_USD,INR_Rate,PayFast_JS
+INR,Indian Rupee,₹,71.36,1.0,1.0
+USD,US Dollar,$,1.0,71.36,71.36
+EUR,Euro,€,0.8907,80.1168,80.1168
+GBP,British Pound,£,0.7536,94.6921,94.6921
+AED,UAE Dirham,د.إ,3.6725,19.4309,19.4309
+JPY,Japanese Yen,¥,108.67,0.6567,0.6567
